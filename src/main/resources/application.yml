@@ -1,0 +1,15 @@
+# Server Config
+server:
+  port: 8081
+
+# Database Config
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5232/customer
+    username: jaimayal
+    password: password
+    driverClassName: org.postgresql.Driver
+  jpa:
+    showSql: true
+    hibernate:
+      ddl-auto: create-drop
