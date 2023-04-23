@@ -28,6 +28,13 @@ public class CustomerService {
     }
 
     public void createCustomer(CustomerRegistrationRequest customer) {
+        if (customerDao.existsCustomerByEmail(customer.email())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Email [" + customer.email() + "] already exists"
+            );
+        }
+        
         customerDao.insertCustomer(new Customer(
                 customer.name(),
                 customer.email(),
