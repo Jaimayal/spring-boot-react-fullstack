@@ -1,9 +1,9 @@
 package com.jaimayal.customer;
 
+import com.jaimayal.exception.DuplicatedResourceException;
+import com.jaimayal.exception.InvalidResourceUpdatesException;
 import com.jaimayal.exception.ResourceNotFoundException;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -28,13 +28,7 @@ public class CustomerService {
     }
 
     public void createCustomer(CustomerRegistrationRequest customer) {
-        if (customerDao.existsCustomerByEmail(customer.email())) {
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "Email [" + customer.email() + "] already exists"
-            );
-        }
-        
+        this.checkIfIsEmailTaken(customer.email());
         customerDao.insertCustomer(new Customer(
                 customer.name(),
                 customer.email(),
@@ -57,24 +51,26 @@ public class CustomerService {
         }
 
         if (update.getEmail() != null && !update.getEmail().equals(customerToUpdate.getEmail())) {
-            if (customerDao.existsCustomerByEmail(update.getEmail())) {
-                throw new ResponseStatusException(
-                        HttpStatus.CONFLICT,
-                        "Email [" + update.getEmail() + "] already exists"
-                );
-            }
+            this.checkIfIsEmailTaken(update.getEmail());
             customerToUpdate.setEmail(update.getEmail());
             updates = true;
         }
         
         if (!updates) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
+            throw new InvalidResourceUpdatesException(
                     "No updates were provided for customer with ID [" + customerId + "]"
             );
         }
         
         customerDao.updateCustomer(customerToUpdate);
+    }
+
+    private void checkIfIsEmailTaken(String email) {
+        if (customerDao.existsCustomerByEmail(email)) {
+            throw new DuplicatedResourceException(
+                    "Customer with email [" + email + "] already exists"
+            );
+        }
     }
 
     public void deleteCustomer(Long customerId) {
