@@ -3,6 +3,7 @@ package com.jaimayal.customer;
 import com.jaimayal.exception.DuplicatedResourceException;
 import com.jaimayal.exception.InvalidResourceUpdatesException;
 import com.jaimayal.exception.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public class CustomerService {
     
     private final CustomerDao customerDao;
 
-    public CustomerService(CustomerDao customerDao) {
+    public CustomerService(@Qualifier("jdbc") CustomerDao customerDao) {
         this.customerDao = customerDao;
     }
 

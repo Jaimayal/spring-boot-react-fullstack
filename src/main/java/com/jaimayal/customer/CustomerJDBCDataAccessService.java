@@ -1,10 +1,12 @@
 package com.jaimayal.customer;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository("jdbc")
 public class CustomerJDBCDataAccessService implements CustomerDao {
     
     private final JdbcTemplate jdbcTemplate;
