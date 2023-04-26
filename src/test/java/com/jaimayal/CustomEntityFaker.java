@@ -3,6 +3,8 @@ package com.jaimayal;
 import com.github.javafaker.Faker;
 import com.jaimayal.customer.Customer;
 
+import java.util.Random;
+
 public class CustomEntityFaker {
     private final Faker faker;
 
@@ -23,5 +25,9 @@ public class CustomEntityFaker {
                 email,
                 age
         );
+    }
+    
+    public Long getId() {
+        return new Random().nextLong(50000, 300000);
     }
 }
