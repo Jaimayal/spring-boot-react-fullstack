@@ -13,11 +13,12 @@ import static org.mockito.Mockito.verify;
 
 class CustomerJPADataAccessServiceTest {
     
+    private static final CustomEntityFaker ENTITY_FAKER = new CustomEntityFaker();
+    
     private CustomerJPADataAccessService underTest;
     @Mock 
     private CustomerRepository customerRepository;
     private AutoCloseable autoCloseable;
-    private static final CustomEntityFaker ENTITY_FAKER = new CustomEntityFaker();
     
     @BeforeEach
     void setUp() {
@@ -42,7 +43,7 @@ class CustomerJPADataAccessServiceTest {
     @Test
     void selectCustomerById() {
         // Given
-        Long id = new Random().nextLong(50000, 300000);
+        Long id = ENTITY_FAKER.getId();
         
         // When
         underTest.selectCustomerById(id);
@@ -66,7 +67,7 @@ class CustomerJPADataAccessServiceTest {
     @Test
     void existsCustomerById() {
         // Given
-        Long id = new Random().nextLong(50000, 300000);
+        Long id = ENTITY_FAKER.getId();
         
         // When
         underTest.existsCustomerById(id);
@@ -102,7 +103,7 @@ class CustomerJPADataAccessServiceTest {
     @Test
     void deleteCustomerById() {
         // Given
-        Long id = new Random().nextLong(50000, 300000);
+        Long id = ENTITY_FAKER.getId();
 
         // When
         underTest.deleteCustomerById(id);
