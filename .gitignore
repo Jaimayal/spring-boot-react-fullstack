@@ -32,3 +32,6 @@
 ### VS Code ###
 **/.vscode/
 **/node_modules/
+/backend/.mvn/
+/backend/.mvnw
+/backend/.mvnw.cmd
