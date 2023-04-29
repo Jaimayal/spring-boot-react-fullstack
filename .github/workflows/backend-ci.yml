@@ -33,5 +33,5 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           cache: 'maven'
-      - name: Run Unit and Integration Tests. Build Jar, Create Image and Upload to Dockerhub
+      - name: Run Unit and Integration Tests
         run: mvn -ntp -B verify
