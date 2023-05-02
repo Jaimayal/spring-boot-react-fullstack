@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 
 export default function CustomerCard({ id, name, email, age, gender }) {
+    const pictureGender = gender === "male" ? "men" : "women";
     return (
         <Center py={6}>
             <Box
@@ -32,7 +33,7 @@ export default function CustomerCard({ id, name, email, age, gender }) {
                     <Avatar
                         size={'xl'}
                         src={
-                            `https://randomuser.me/api/portraits/med/${gender}/${id}.jpg`
+                            `https://randomuser.me/api/portraits/${pictureGender}/${id}.jpg`
                         }
                         alt={'Author'}
                         css={{
