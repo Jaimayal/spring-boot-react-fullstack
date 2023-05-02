@@ -1,6 +1,7 @@
 package com.jaimayal.customer;
 
 import com.jaimayal.exception.DuplicatedResourceException;
+import com.jaimayal.exception.InvalidResourceException;
 import com.jaimayal.exception.InvalidResourceUpdatesException;
 import com.jaimayal.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,11 +31,12 @@ public class CustomerService {
 
     public void createCustomer(CustomerRegistrationRequest customer) {
         this.checkIfIsEmailTaken(customer.email());
+        this.checkIfGenderIsValid(customer.gender());
         customerDao.insertCustomer(new Customer(
                 customer.name(),
                 customer.email(),
-                customer.age()
-        ));
+                customer.age(),
+                customer.gender()));
     }
 
     public void updateCustomer(Long customerId, Customer update) {
@@ -57,6 +59,12 @@ public class CustomerService {
             updates = true;
         }
         
+        if (update.getGender() != null && !update.getGender().equals(customerToUpdate.getGender())) {
+            this.checkIfGenderIsValid(update.getGender());
+            customerToUpdate.setGender(update.getGender());
+            updates = true;
+        }
+        
         if (!updates) {
             throw new InvalidResourceUpdatesException(
                     "No updates were provided for customer with ID [" + customerId + "]"
@@ -64,6 +72,15 @@ public class CustomerService {
         }
         
         customerDao.updateCustomer(customerToUpdate);
+    }
+
+    private void checkIfGenderIsValid(String gender) {
+        if (!"male".equals(gender) && !"female".equals(gender)) {
+            throw new InvalidResourceException(
+                    "The provided gender [" + gender + "] is invalid"
+            );
+        }
+
     }
 
     private void checkIfIsEmailTaken(String email) {

@@ -15,6 +15,8 @@ public class CustomerRowMapper implements RowMapper<Customer> {
         String name = resultSet.getString("name");
         String email = resultSet.getString("email");
         Integer age = resultSet.getInt("age");
-        return new Customer(customerId, name, email, age);
+        String gender = resultSet.getString("gender");
+        
+        return new Customer(customerId, name, email, age, gender);
     }
 }

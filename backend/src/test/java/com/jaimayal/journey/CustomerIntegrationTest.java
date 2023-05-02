@@ -31,7 +31,8 @@ public class CustomerIntegrationTest {
         CustomerRegistrationRequest request = new CustomerRegistrationRequest(
                 expected.getName(),
                 expected.getEmail(),
-                expected.getAge()
+                expected.getAge(),
+                expected.getGender()
         );
         
         // Send a POST request to "api/v1/customers"
@@ -87,7 +88,8 @@ public class CustomerIntegrationTest {
         CustomerRegistrationRequest request = new CustomerRegistrationRequest(
                 expected.getName(),
                 expected.getEmail(),
-                expected.getAge()
+                expected.getAge(),
+                expected.getGender()
         );
 
         // Send a POST request to "api/v1/customers"
@@ -148,7 +150,8 @@ public class CustomerIntegrationTest {
         CustomerRegistrationRequest request = new CustomerRegistrationRequest(
                 previous.getName(),
                 previous.getEmail(),
-                previous.getAge()
+                previous.getAge(),
+                previous.getGender()
         );
 
         // Send a POST request to "api/v1/customers"

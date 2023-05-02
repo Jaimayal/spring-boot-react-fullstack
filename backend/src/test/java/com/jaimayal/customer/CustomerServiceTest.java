@@ -2,6 +2,7 @@ package com.jaimayal.customer;
 
 import com.jaimayal.CustomEntityFaker;
 import com.jaimayal.exception.DuplicatedResourceException;
+import com.jaimayal.exception.InvalidResourceException;
 import com.jaimayal.exception.InvalidResourceUpdatesException;
 import com.jaimayal.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -88,7 +89,8 @@ class CustomerServiceTest {
         CustomerRegistrationRequest registration = new CustomerRegistrationRequest(
                 fakeCustomer.getName(),
                 fakeCustomer.getEmail(),
-                fakeCustomer.getAge()
+                fakeCustomer.getAge(),
+                fakeCustomer.getGender()
         );
         when(customerDao.existsCustomerByEmail(anyString())).thenReturn(false);
         
@@ -112,7 +114,8 @@ class CustomerServiceTest {
         CustomerRegistrationRequest registration = new CustomerRegistrationRequest(
                 fakeCustomer.getName(),
                 fakeCustomer.getEmail(),
-                fakeCustomer.getAge()
+                fakeCustomer.getAge(),
+                fakeCustomer.getGender()
         );
         when(customerDao.existsCustomerByEmail(anyString())).thenReturn(true);
 
@@ -130,6 +133,8 @@ class CustomerServiceTest {
         // Given
         Customer previous = ENTITY_FAKER.getCustomer();
         Customer updated = ENTITY_FAKER.getCustomer();
+        String updatedGender = previous.getGender().equals("male") ? "female" : "male";
+        updated.setGender(updatedGender);
         Long previousId = ENTITY_FAKER.getId();
         
         when(customerDao.selectCustomerById(previousId))
@@ -148,6 +153,7 @@ class CustomerServiceTest {
         assertThat(customerCaptured.getName()).isEqualTo(updated.getName());
         assertThat(customerCaptured.getEmail()).isEqualTo(updated.getEmail());
         assertThat(customerCaptured.getAge()).isEqualTo(updated.getAge());
+        assertThat(customerCaptured.getGender()).isEqualTo(updated.getGender());
     }
 
     @Test
@@ -158,8 +164,8 @@ class CustomerServiceTest {
         Customer updated = new Customer(
                 updatedName,
                 previous.getEmail(), 
-                previous.getAge()
-        );
+                previous.getAge(),
+                previous.getGender());
         Long previousId = ENTITY_FAKER.getId();
 
         when(customerDao.selectCustomerById(previousId))
@@ -176,6 +182,7 @@ class CustomerServiceTest {
         assertThat(customerCaptured.getName()).isEqualTo(updated.getName());
         assertThat(customerCaptured.getEmail()).isEqualTo(previous.getEmail());
         assertThat(customerCaptured.getAge()).isEqualTo(previous.getAge());
+        assertThat(customerCaptured.getGender()).isEqualTo(previous.getGender());
     }
 
     @Test
@@ -186,8 +193,8 @@ class CustomerServiceTest {
         Customer updated = new Customer(
                 previous.getName(), 
                 updatedEmail,
-                previous.getAge()
-        );
+                previous.getAge(),
+                previous.getGender());
         Long previousId = ENTITY_FAKER.getId();
 
         when(customerDao.selectCustomerById(previousId))
@@ -206,6 +213,7 @@ class CustomerServiceTest {
         assertThat(customerCaptured.getName()).isEqualTo(previous.getName());
         assertThat(customerCaptured.getEmail()).isEqualTo(updated.getEmail());
         assertThat(customerCaptured.getAge()).isEqualTo(previous.getAge());
+        assertThat(customerCaptured.getGender()).isEqualTo(previous.getGender());
     }
 
     @Test
@@ -216,8 +224,8 @@ class CustomerServiceTest {
         Customer updated = new Customer(
                 previous.getName(),
                 previous.getEmail(),
-                updatedAge
-        );
+                updatedAge,
+                previous.getGender());
         Long previousId = ENTITY_FAKER.getId();
 
         when(customerDao.selectCustomerById(previousId))
@@ -234,6 +242,36 @@ class CustomerServiceTest {
         assertThat(customerCaptured.getName()).isEqualTo(previous.getName());
         assertThat(customerCaptured.getEmail()).isEqualTo(previous.getEmail());
         assertThat(customerCaptured.getAge()).isEqualTo(updated.getAge());
+        assertThat(customerCaptured.getGender()).isEqualTo(previous.getGender());
+    }
+
+    @Test
+    void checkUpdateCustomerUpdatesGenderSuccessfully() {
+        // Given
+        Customer previous = ENTITY_FAKER.getCustomer();
+        String updatedGender = previous.getGender().equals("male") ? "female" : "male";
+        Customer updated = new Customer(
+                previous.getName(),
+                previous.getEmail(),
+                previous.getAge(), 
+                updatedGender);
+        Long previousId = ENTITY_FAKER.getId();
+
+        when(customerDao.selectCustomerById(previousId))
+                .thenReturn(Optional.of(previous));
+
+        // When
+        underTest.updateCustomer(previousId, updated);
+
+        // Then
+        ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);
+        verify(customerDao).updateCustomer(customerArgumentCaptor.capture());
+        Customer customerCaptured = customerArgumentCaptor.getValue();
+
+        assertThat(customerCaptured.getName()).isEqualTo(previous.getName());
+        assertThat(customerCaptured.getEmail()).isEqualTo(previous.getEmail());
+        assertThat(customerCaptured.getAge()).isEqualTo(previous.getAge());
+        assertThat(customerCaptured.getGender()).isEqualTo(updatedGender);
     }
 
     @Test
@@ -261,8 +299,8 @@ class CustomerServiceTest {
         Customer updated = new Customer(
                 previous.getName(),
                 updatedEmail,
-                previous.getAge()
-        );
+                previous.getAge(),
+                previous.getGender());
         Long previousId = ENTITY_FAKER.getId();
 
         when(customerDao.selectCustomerById(previousId))
@@ -286,8 +324,8 @@ class CustomerServiceTest {
         Customer updated = new Customer(
                 previous.getName(),
                 previous.getEmail(),
-                previous.getAge()
-        );
+                previous.getAge(),
+                previous.getGender());
         Long previousId = ENTITY_FAKER.getId();
 
         when(customerDao.selectCustomerById(previousId))
@@ -297,6 +335,30 @@ class CustomerServiceTest {
         assertThatThrownBy(() -> underTest.updateCustomer(previousId, updated))
                 .isInstanceOf(InvalidResourceUpdatesException.class)
                 .hasMessage("No updates were provided for customer with ID [" + previousId + "]");
+
+        // Then
+        verify(customerDao, never()).updateCustomer(any());
+    }
+
+    @Test
+    void checkUpdateCustomerThrowsInvalidResourceExceptionIfNoValidGenderIsProvided() {
+        // Given
+        Customer previous = ENTITY_FAKER.getCustomer();
+        String invalidGender = "INVALID";
+        Customer updated = new Customer(
+                previous.getName(),
+                previous.getEmail(),
+                previous.getAge(),
+                invalidGender);
+        Long previousId = ENTITY_FAKER.getId();
+
+        when(customerDao.selectCustomerById(previousId))
+                .thenReturn(Optional.of(previous));
+
+        // When
+        assertThatThrownBy(() -> underTest.updateCustomer(previousId, updated))
+                .isInstanceOf(InvalidResourceException.class)
+                .hasMessage("The provided gender [" + invalidGender + "] is invalid");
 
         // Then
         verify(customerDao, never()).updateCustomer(any());

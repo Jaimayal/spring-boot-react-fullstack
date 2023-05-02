@@ -61,6 +61,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractDaoTest {
             assertThat(actual.getEmail()).isEqualTo(customer.getEmail());
             assertThat(actual.getName()).isEqualTo(customer.getName());
             assertThat(actual.getAge()).isEqualTo(customer.getAge());
+            assertThat(actual.getGender()).isEqualTo(customer.getGender());
         });
     }
 
@@ -150,6 +151,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractDaoTest {
             assertThat(actual.getEmail()).isEqualTo(old.getEmail());
             assertThat(actual.getName()).isEqualTo(updatedName);
             assertThat(actual.getAge()).isEqualTo(old.getAge());
+            assertThat(actual.getGender()).isEqualTo(old.getGender());
         });
     }
 
@@ -174,6 +176,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractDaoTest {
             assertThat(actual.getEmail()).isEqualTo(updatedEmail);
             assertThat(actual.getName()).isEqualTo(old.getName());
             assertThat(actual.getAge()).isEqualTo(old.getAge());
+            assertThat(actual.getGender()).isEqualTo(old.getGender());
         });
     }
 
@@ -198,6 +201,32 @@ class CustomerJDBCDataAccessServiceTest extends AbstractDaoTest {
             assertThat(actual.getEmail()).isEqualTo(old.getEmail());
             assertThat(actual.getName()).isEqualTo(old.getName());
             assertThat(actual.getAge()).isEqualTo(updatedAge);
+            assertThat(actual.getGender()).isEqualTo(old.getGender());
+        });
+    }
+
+    @Test
+    void updateGenderFieldOnCustomer() {
+        // Given
+        Customer old = ENTITY_FAKER.getCustomer();
+        String updatedGender = old.getGender().equals("male") ? "female" : "male";
+        underTest.insertCustomer(old);
+
+        Long id = this.getCustomerIdInDatabase(old);
+        old.setId(id);
+
+        // When
+        old.setGender(updatedGender);
+        underTest.updateCustomer(old);
+
+        // Then
+        Optional<Customer> actualOptional = underTest.selectCustomerById(id);
+
+        assertThat(actualOptional).isPresent().hasValueSatisfying(actual -> {
+            assertThat(actual.getEmail()).isEqualTo(old.getEmail());
+            assertThat(actual.getName()).isEqualTo(old.getName());
+            assertThat(actual.getAge()).isEqualTo(old.getAge());
+            assertThat(actual.getGender()).isEqualTo(updatedGender);
         });
     }
 
@@ -214,6 +243,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractDaoTest {
         old.setName(updated.getName());
         old.setEmail(updated.getEmail());
         old.setAge(updated.getAge());
+        old.setGender(updated.getGender());
         underTest.updateCustomer(old);
 
         // Then
@@ -222,6 +252,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractDaoTest {
             assertThat(actual.getEmail()).isEqualTo(updated.getEmail());
             assertThat(actual.getName()).isEqualTo(updated.getName());
             assertThat(actual.getAge()).isEqualTo(updated.getAge());
+            assertThat(actual.getGender()).isEqualTo(updated.getGender());
         });
     }
     
@@ -243,6 +274,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractDaoTest {
             assertThat(actual.getEmail()).isEqualTo(old.getEmail());
             assertThat(actual.getName()).isEqualTo(old.getName());
             assertThat(actual.getAge()).isEqualTo(old.getAge());
+            assertThat(actual.getGender()).isEqualTo(old.getGender());
         });
     }
 
