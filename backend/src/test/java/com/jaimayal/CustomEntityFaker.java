@@ -19,12 +19,13 @@ public class CustomEntityFaker {
         String lastName = fullName.split(" ")[1].toLowerCase();
         String email = firstName.toLowerCase() + "." + lastName.toLowerCase() + "@gmail.com";
         Integer age = faker.random().nextInt(18,50);
+        String gender = faker.random().nextInt(5) % 2 == 0 ? "male" : "female";
         
         return new Customer(
                 firstName,
                 email,
-                age
-        );
+                age,
+                gender);
     }
     
     public Long getId() {
