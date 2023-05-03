@@ -15,7 +15,7 @@ services:
     restart: unless-stopped
   customers-api:
     container_name: customers-api
-    image: jaimayal/spring-customers-api
+    image: jaimayal/customers-api
     ports:
       - "8081:8081"
     networks:

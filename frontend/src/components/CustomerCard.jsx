@@ -7,11 +7,12 @@ import {
     Flex,
     Text,
     Stack,
-    useColorModeValue, Tag,
-} from '@chakra-ui/react';
+    useColorModeValue,
+    Tag,
+} from '@chakra-ui/react'
 
 export default function CustomerCard({ id, name, email, age, gender }) {
-    const pictureGender = gender === "male" ? "men" : "women";
+    const pictureGender = gender === 'male' ? 'men' : 'women'
     return (
         <Center py={6}>
             <Box
@@ -20,7 +21,8 @@ export default function CustomerCard({ id, name, email, age, gender }) {
                 bg={useColorModeValue('white', 'gray.800')}
                 boxShadow={'2xl'}
                 rounded={'md'}
-                overflow={'hidden'}>
+                overflow={'hidden'}
+            >
                 <Image
                     h={'120px'}
                     w={'full'}
@@ -32,9 +34,7 @@ export default function CustomerCard({ id, name, email, age, gender }) {
                 <Flex justify={'center'} mt={-12}>
                     <Avatar
                         size={'xl'}
-                        src={
-                            `https://randomuser.me/api/portraits/${pictureGender}/${id}.jpg`
-                        }
+                        src={`https://randomuser.me/api/portraits/${pictureGender}/${id}.jpg`}
                         alt={'Author'}
                         css={{
                             border: '2px solid white',
@@ -44,15 +44,21 @@ export default function CustomerCard({ id, name, email, age, gender }) {
 
                 <Box p={6}>
                     <Stack spacing={2} align={'center'} mb={5}>
-                        <Tag borderRadius={"full"}>{id}</Tag>
-                        <Heading fontSize={'2xl'} fontWeight={500} fontFamily={'body'}>
+                        <Tag borderRadius={'full'}>{id}</Tag>
+                        <Heading
+                            fontSize={'2xl'}
+                            fontWeight={500}
+                            fontFamily={'body'}
+                        >
                             {name}
                         </Heading>
                         <Text color={'gray.500'}>{email}</Text>
-                        <Text color={'gray.500'}>Age {age} | {gender}</Text>
+                        <Text color={'gray.500'}>
+                            Age {age} | {gender}
+                        </Text>
                     </Stack>
                 </Box>
             </Box>
         </Center>
-    );
+    )
 }
