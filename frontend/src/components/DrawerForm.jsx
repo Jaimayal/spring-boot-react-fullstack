@@ -9,14 +9,31 @@ import {
     DrawerOverlay,
     Input,
     useDisclosure,
-} from '@chakra-ui/react'
+} from "@chakra-ui/react"
 
-export const DrawerForm = () => {
+const AddIcon = () => "+"
+
+function DrawerToggleButton({ onOpen }) {
+    return (
+        <>
+            <Button
+                leftIcon={<AddIcon />}
+                colorScheme={"teal"}
+                variant={"solid"}
+                onClick={onOpen}
+            >
+                Create Customer
+            </Button>
+        </>
+    )
+}
+
+export default function DrawerForm() {
     const { isOpen, onOpen, onClose } = useDisclosure()
     return (
         <>
-            <Button onClick={onOpen}>Open</Button>
-            <Drawer isOpen={isOpen} onClose={onClose}>
+            <DrawerToggleButton onOpen={onOpen} />
+            <Drawer isOpen={isOpen} onClose={onClose} size={"xl"}>
                 <DrawerOverlay />
                 <DrawerContent>
                     <DrawerCloseButton />
@@ -27,7 +44,7 @@ export const DrawerForm = () => {
                             id="my-form"
                             onSubmit={(e) => {
                                 e.preventDefault()
-                                console.log('submitted')
+                                console.log("submitted")
                             }}
                         >
                             <Input name="nickname" placeholder="Type here..." />

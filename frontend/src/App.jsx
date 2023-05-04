@@ -1,9 +1,9 @@
-import CustomerCard from './components/CustomerCard'
-import Sidebar from './components/Sidebar'
-import { Wrap, WrapItem, Spinner } from '@chakra-ui/react'
-import * as HttpClient from './services/HttpClient.js'
-import { useEffect, useState } from 'react'
-import DrawerFormToggleButton from './components/DrawerFormToggleButton'
+import CustomerCard from "./components/CustomerCard"
+import Sidebar from "./components/Sidebar"
+import { Wrap, WrapItem, Spinner } from "@chakra-ui/react"
+import * as HttpClient from "./services/HttpClient.js"
+import { useEffect, useState } from "react"
+import DrawerForm from "./components/DrawerForm"
 
 function App() {
     const [customers, setCustomers] = useState([])
@@ -36,7 +36,7 @@ function App() {
     if (customers.length <= 0) {
         return (
             <Sidebar>
-                <DrawerFormToggleButton />
+                <DrawerForm />
                 <Wrap spacingX="3vw" justify="center">
                     <WrapItem>
                         <CustomerCard></CustomerCard>
@@ -48,6 +48,7 @@ function App() {
 
     return (
         <Sidebar>
+            <DrawerForm />
             <Wrap spacingX="3vw" justify="center">
                 {customers.map((customer, index) => (
                     <WrapItem key={index}>

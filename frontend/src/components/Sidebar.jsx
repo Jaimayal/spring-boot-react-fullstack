@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react"
 import {
     IconButton,
     Avatar,
@@ -19,7 +19,7 @@ import {
     MenuDivider,
     MenuItem,
     MenuList,
-} from '@chakra-ui/react'
+} from "@chakra-ui/react"
 import {
     FiHome,
     FiTrendingUp,
@@ -29,23 +29,23 @@ import {
     FiMenu,
     FiBell,
     FiChevronDown,
-} from 'react-icons/fi'
+} from "react-icons/fi"
 
 const LinkItems = [
-    { name: 'Home', icon: FiHome },
-    { name: 'Trending', icon: FiTrendingUp },
-    { name: 'Explore', icon: FiCompass },
-    { name: 'Favourites', icon: FiStar },
-    { name: 'Settings', icon: FiSettings },
+    { name: "Home", icon: FiHome },
+    { name: "Trending", icon: FiTrendingUp },
+    { name: "Explore", icon: FiCompass },
+    { name: "Favourites", icon: FiStar },
+    { name: "Settings", icon: FiSettings },
 ]
 
 export default function Sidebar({ children }) {
     const { isOpen, onOpen, onClose } = useDisclosure()
     return (
-        <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
+        <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
             <SidebarContent
                 onClose={() => onClose}
-                display={{ base: 'none', md: 'block' }}
+                display={{ base: "none", md: "block" }}
             />
             <Drawer
                 autoFocus={false}
@@ -73,10 +73,10 @@ const SidebarContent = ({ onClose, ...rest }) => {
     return (
         <Box
             transition="3s ease"
-            bg={useColorModeValue('white', 'gray.900')}
+            bg={useColorModeValue("white", "gray.900")}
             borderRight="1px"
-            borderRightColor={useColorModeValue('gray.200', 'gray.700')}
-            w={{ base: 'full', md: 60 }}
+            borderRightColor={useColorModeValue("gray.200", "gray.700")}
+            w={{ base: "full", md: 60 }}
             pos="fixed"
             h="full"
             {...rest}
@@ -91,7 +91,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
                     Logo
                 </Text>
                 <CloseButton
-                    display={{ base: 'flex', md: 'none' }}
+                    display={{ base: "flex", md: "none" }}
                     onClick={onClose}
                 />
             </Flex>
@@ -108,8 +108,8 @@ const NavItem = ({ icon, children, ...rest }) => {
     return (
         <Link
             href="#"
-            style={{ textDecoration: 'none' }}
-            _focus={{ boxShadow: 'none' }}
+            style={{ textDecoration: "none" }}
+            _focus={{ boxShadow: "none" }}
         >
             <Flex
                 align="center"
@@ -119,8 +119,8 @@ const NavItem = ({ icon, children, ...rest }) => {
                 role="group"
                 cursor="pointer"
                 _hover={{
-                    bg: 'cyan.400',
-                    color: 'white',
+                    bg: "cyan.400",
+                    color: "white",
                 }}
                 {...rest}
             >
@@ -129,7 +129,7 @@ const NavItem = ({ icon, children, ...rest }) => {
                         mr="4"
                         fontSize="16"
                         _groupHover={{
-                            color: 'white',
+                            color: "white",
                         }}
                         as={icon}
                     />
@@ -147,14 +147,14 @@ const MobileNav = ({ onOpen, ...rest }) => {
             px={{ base: 4, md: 4 }}
             height="20"
             alignItems="center"
-            bg={useColorModeValue('white', 'gray.900')}
+            bg={useColorModeValue("white", "gray.900")}
             borderBottomWidth="1px"
-            borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
-            justifyContent={{ base: 'space-between', md: 'flex-end' }}
+            borderBottomColor={useColorModeValue("gray.200", "gray.700")}
+            justifyContent={{ base: "space-between", md: "flex-end" }}
             {...rest}
         >
             <IconButton
-                display={{ base: 'flex', md: 'none' }}
+                display={{ base: "flex", md: "none" }}
                 onClick={onOpen}
                 variant="outline"
                 aria-label="open menu"
@@ -162,7 +162,7 @@ const MobileNav = ({ onOpen, ...rest }) => {
             />
 
             <Text
-                display={{ base: 'flex', md: 'none' }}
+                display={{ base: "flex", md: "none" }}
                 fontSize="2xl"
                 fontFamily="monospace"
                 fontWeight="bold"
@@ -170,29 +170,29 @@ const MobileNav = ({ onOpen, ...rest }) => {
                 Logo
             </Text>
 
-            <HStack spacing={{ base: '0', md: '6' }}>
+            <HStack spacing={{ base: "0", md: "6" }}>
                 <IconButton
                     size="lg"
                     variant="ghost"
                     aria-label="open menu"
                     icon={<FiBell />}
                 />
-                <Flex alignItems={'center'}>
+                <Flex alignItems={"center"}>
                     <Menu>
                         <MenuButton
                             py={2}
                             transition="all 0.3s"
-                            _focus={{ boxShadow: 'none' }}
+                            _focus={{ boxShadow: "none" }}
                         >
                             <HStack>
                                 <Avatar
-                                    size={'sm'}
+                                    size={"sm"}
                                     src={
-                                        'https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
+                                        "https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
                                     }
                                 />
                                 <VStack
-                                    display={{ base: 'none', md: 'flex' }}
+                                    display={{ base: "none", md: "flex" }}
                                     alignItems="flex-start"
                                     spacing="1px"
                                     ml="2"
@@ -202,16 +202,16 @@ const MobileNav = ({ onOpen, ...rest }) => {
                                         Admin
                                     </Text>
                                 </VStack>
-                                <Box display={{ base: 'none', md: 'flex' }}>
+                                <Box display={{ base: "none", md: "flex" }}>
                                     <FiChevronDown />
                                 </Box>
                             </HStack>
                         </MenuButton>
                         <MenuList
-                            bg={useColorModeValue('white', 'gray.900')}
+                            bg={useColorModeValue("white", "gray.900")}
                             borderColor={useColorModeValue(
-                                'gray.200',
-                                'gray.700'
+                                "gray.200",
+                                "gray.700"
                             )}
                         >
                             <MenuItem>Profile</MenuItem>
