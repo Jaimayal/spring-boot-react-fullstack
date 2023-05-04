@@ -7,3 +7,9 @@ export async function getCustomers() {
 export async function saveCustomer(customer) {
     return await axios.post(`http://localhost:8081/api/v1/customers`, customer)
 }
+
+export async function deleteCustomer(customerId) {
+    return await axios.delete(
+        `http://localhost:8081/api/v1/customers/${customerId}`
+    )
+}

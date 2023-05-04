@@ -1,27 +1,30 @@
 import CustomerCard from "./components/CustomerCard"
 import Sidebar from "./components/Sidebar"
-import { Wrap, WrapItem, Spinner } from "@chakra-ui/react"
-import * as HttpClient from "./services/HttpClient.js"
-import { useEffect, useState } from "react"
-import DrawerForm from "./components/DrawerForm"
+import { Wrap, WrapItem, Spinner, Text, useDisclosure } from "@chakra-ui/react"
+import * as ApiClient from "./services/ApiClient.js"
+import { useEffect, useRef, useState } from "react"
+import DrawerFormContainer from "./components/DrawerFormContainer.jsx"
 
 function App() {
     const [customers, setCustomers] = useState([])
     const [isLoading, setIsLoading] = useState(true)
 
-    useEffect(() => {
+    function fetchCustomers() {
         setIsLoading(true)
-        HttpClient.getCustomers()
+        ApiClient.getCustomers()
             .then((response) => setCustomers(response.data))
             .catch((error) => {
                 console.error(error)
             })
             .finally(() => setIsLoading(false))
-    }, [])
+    }
+
+    useEffect(() => fetchCustomers(), [])
 
     if (isLoading) {
         return (
             <Sidebar>
+                <DrawerFormContainer />
                 <Spinner
                     thickness="4px"
                     speed="0.65s"
@@ -36,23 +39,22 @@ function App() {
     if (customers.length <= 0) {
         return (
             <Sidebar>
-                <DrawerForm />
-                <Wrap spacingX="3vw" justify="center">
-                    <WrapItem>
-                        <CustomerCard></CustomerCard>
-                    </WrapItem>
-                </Wrap>
+                <DrawerFormContainer />
+                <Text mt={"5vh"}>No customers found</Text>
             </Sidebar>
         )
     }
 
     return (
         <Sidebar>
-            <DrawerForm />
+            <DrawerFormContainer fetchCustomers={fetchCustomers} />
             <Wrap spacingX="3vw" justify="center">
                 {customers.map((customer, index) => (
                     <WrapItem key={index}>
-                        <CustomerCard {...customer} />
+                        <CustomerCard
+                            fetchCustomers={fetchCustomers}
+                            {...customer}
+                        />
                     </WrapItem>
                 ))}
             </Wrap>
