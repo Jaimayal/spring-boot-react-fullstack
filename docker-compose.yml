@@ -31,6 +31,10 @@ services:
     ports:
       - "3000:5173"
     restart: unless-stopped
+    build:
+        context: frontend
+        args:
+            BASE_URL: http://localhost:8081
     depends_on:
       - customers-api
 

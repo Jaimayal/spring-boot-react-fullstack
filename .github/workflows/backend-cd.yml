@@ -47,16 +47,16 @@ jobs:
       - name: Update Dockerrun.aws.json image tag with Build Number
         run: |
           echo "Dockerrun.aws.json before updating Docker Image Tag"
-          cat Dockerrun.aws.json
-          sed -i -E 's_(jaimayal/customers-api:)([^"]*)_\1'${{steps.build-number.outputs.BUILD_NUMBER}}'_' Dockerrun.aws.json
+          cat ../Dockerrun.aws.json
+          sed -i -E 's_(jaimayal/customers-api:)([^"]*)_\1'${{steps.build-number.outputs.BUILD_NUMBER}}'_' ../Dockerrun.aws.json
           echo "Dockerrun.aws.json after updating Docker Image Tag"
-          cat Dockerrun.aws.json
+          cat ../Dockerrun.aws.json
       - name: Deploying new Dockerrun.aws.json to AWS Elastic Beanstalk
         run: echo "TODO"
       - name: Commit and Push updated Dockerrun.aws.json
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add .
+          git add ../Dockerrun.aws.json
           git commit -m "Updated Dockerrun.aws.json with new Build Tag ${{steps.build-number.outputs.BUILD_NUMBER}}"
           git push
