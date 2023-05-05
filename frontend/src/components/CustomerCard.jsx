@@ -24,6 +24,7 @@ import {
     errorToastNotification,
     successToastNotification,
 } from "../services/UiNotificationProvider.js"
+import UpdateFormContainer from "./UpdateFormContainer"
 
 export default function CustomerCard({
     id,
@@ -34,7 +35,11 @@ export default function CustomerCard({
     fetchCustomers,
 }) {
     const pictureGender = gender === "male" ? "men" : "women"
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const {
+        isOpen,
+        onOpen: openDeleteDialog,
+        onClose: closeDeleteDialog,
+    } = useDisclosure()
     const cancelRef = useRef()
 
     function deleteCustomer(customerId) {
@@ -51,7 +56,7 @@ export default function CustomerCard({
                 errorToastNotification(error.code, error.response.data.message)
             })
             .finally(() => {
-                onClose()
+                closeDeleteDialog()
             })
     }
 
@@ -104,14 +109,15 @@ export default function CustomerCard({
                             colorScheme={"red"}
                             variant={"solid"}
                             rounded={"full"}
-                            onClick={() => onOpen()}
+                            width={"full"}
+                            onClick={() => openDeleteDialog()}
                         >
                             Delete
                         </Button>
                         <AlertDialog
                             isOpen={isOpen}
                             leastDestructiveRef={cancelRef}
-                            onClose={onClose}
+                            onClose={closeDeleteDialog}
                         >
                             <AlertDialogOverlay>
                                 <AlertDialogContent>
@@ -130,7 +136,7 @@ export default function CustomerCard({
                                     <AlertDialogFooter>
                                         <Button
                                             ref={cancelRef}
-                                            onClick={onClose}
+                                            onClick={closeDeleteDialog}
                                         >
                                             Cancel
                                         </Button>
@@ -145,6 +151,16 @@ export default function CustomerCard({
                                 </AlertDialogContent>
                             </AlertDialogOverlay>
                         </AlertDialog>
+                        <UpdateFormContainer
+                            fetchCustomers={fetchCustomers}
+                            customer={{
+                                id,
+                                name,
+                                email,
+                                age,
+                                gender,
+                            }}
+                        />
                     </Stack>
                 </Box>
             </Box>

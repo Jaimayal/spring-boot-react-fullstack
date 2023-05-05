@@ -13,3 +13,7 @@ export async function deleteCustomer(customerId) {
         `http://localhost:8081/api/v1/customers/${customerId}`
     )
 }
+
+export async function updateCustomer(customerId, updatedCustomer) {
+    return await axios.put(`http://localhost:8081/api/v1/customers/${customerId}`, updatedCustomer)
+}

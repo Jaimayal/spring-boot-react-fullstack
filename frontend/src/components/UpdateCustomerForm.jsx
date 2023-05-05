@@ -33,6 +33,7 @@ const MyTextInput = ({ label, ...props }) => {
 
 const MySelect = ({ label, ...props }) => {
     const [field, meta] = useField(props)
+
     return (
         <>
             <FormLabel htmlFor={props.id || props.name}>{label}</FormLabel>
@@ -47,16 +48,22 @@ const MySelect = ({ label, ...props }) => {
     )
 }
 
-export default function CreateCustomerForm({ fetchCustomers, onClose }) {
+export default function UpdateCustomerForm({
+    fetchCustomers,
+    onClose,
+    customerValues,
+}) {
+    const id = customerValues.id
+
     return (
         <>
             <Formik
                 validateOnMount={true}
                 initialValues={{
-                    name: "",
-                    email: "",
-                    age: "",
-                    gender: "",
+                    name: customerValues.name,
+                    email: customerValues.email,
+                    age: customerValues.age,
+                    gender: customerValues.gender,
                 }}
                 validationSchema={Yup.object({
                     name: Yup.string()
@@ -75,11 +82,11 @@ export default function CreateCustomerForm({ fetchCustomers, onClose }) {
                 })}
                 onSubmit={(values, { setSubmitting }) => {
                     setSubmitting(true)
-                    ApiClient.saveCustomer(values)
+                    ApiClient.updateCustomer(id, values)
                         .then((_) => {
                             successToastNotification(
                                 "Success",
-                                "Customer created successfully"
+                                "Customer updated successfully"
                             )
                             fetchCustomers()
                             onClose()
@@ -93,7 +100,7 @@ export default function CreateCustomerForm({ fetchCustomers, onClose }) {
                         .finally(() => setSubmitting(false))
                 }}
             >
-                {({ isValid, isSubmitting }) => (
+                {({ isValid, isSubmitting, dirty }) => (
                     <Form>
                         <Stack spacing={"24px"}>
                             <MyTextInput
@@ -125,7 +132,7 @@ export default function CreateCustomerForm({ fetchCustomers, onClose }) {
 
                             <Button
                                 type="submit"
-                                isDisabled={isSubmitting || !isValid}
+                                isDisabled={!dirty || isSubmitting || !isValid}
                             >
                                 Submit
                             </Button>
