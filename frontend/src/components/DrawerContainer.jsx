@@ -7,20 +7,11 @@ import {
     DrawerFooter,
     DrawerHeader,
     DrawerOverlay,
-    useDisclosure,
 } from "@chakra-ui/react"
-import ToggleDrawerButton from "./shared/ToggleDrawerButton"
 
-const AddIcon = () => "+"
 const CloseIcon = () => "X"
 
-export default function DrawerContainer({
-    header,
-    children,
-    isOpen,
-    onOpen,
-    onClose,
-}) {
+export default function DrawerContainer({ header, children, isOpen, onClose }) {
     return (
         <>
             <Drawer isOpen={isOpen} onClose={onClose} size={"xl"}>

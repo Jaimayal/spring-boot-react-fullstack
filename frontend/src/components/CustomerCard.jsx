@@ -26,7 +26,6 @@ import {
 } from "../services/UiNotificationProvider.js"
 import DrawerContainer from "./DrawerContainer.jsx"
 import CustomerForm from "./CustomerForm.jsx"
-import ToggleDrawerButton from "./shared/ToggleDrawerButton.jsx"
 
 export default function CustomerCard({
     id,
@@ -34,7 +33,7 @@ export default function CustomerCard({
     email,
     age,
     gender,
-    handleSubmit,
+    fetchCustomers,
 }) {
     const pictureGender = gender === "male" ? "men" : "women"
     const {
@@ -68,12 +67,20 @@ export default function CustomerCard({
     }
 
     function onUpdateFormSubmit(values, { setSubmitting }) {
-        handleSubmit(
-            values,
-            setSubmitting,
-            (values) => ApiClient.updateCustomer(id, values),
-            "Customer updated successfully"
-        )
+        setSubmitting(true)
+        ApiClient.updateCustomer(id, values)
+            .then(() => {
+                successToastNotification(
+                    "Success",
+                    "Customer updated successfully"
+                )
+                fetchCustomers()
+                onDrawerClose()
+            })
+            .catch((error) =>
+                errorToastNotification(error.code, error.response.data.message)
+            )
+            .finally(() => setSubmitting(false))
     }
 
     return (
@@ -188,8 +195,9 @@ export default function CustomerCard({
                                     age,
                                     gender,
                                 }}
-                                onSubmit={onUpdateFormSubmit}
+                                onFormSubmit={onUpdateFormSubmit}
                             />
+                            <p>H</p>
                         </DrawerContainer>
                     </Stack>
                 </Box>
