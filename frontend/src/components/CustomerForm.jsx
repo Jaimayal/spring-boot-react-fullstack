@@ -27,7 +27,7 @@ export default function CustomerForm({ initialValues, onFormSubmit }) {
                 })}
                 onSubmit={onFormSubmit}
             >
-                {({ isValid, isSubmitting }) => (
+                {({ isValid, isSubmitting, dirty }) => (
                     <Form>
                         <Stack spacing={"24px"}>
                             <MyTextInput
@@ -59,7 +59,7 @@ export default function CustomerForm({ initialValues, onFormSubmit }) {
 
                             <Button
                                 type="submit"
-                                isDisabled={isSubmitting || !isValid}
+                                isDisabled={isSubmitting || !isValid || !dirty}
                             >
                                 Submit
                             </Button>

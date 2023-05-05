@@ -9,14 +9,13 @@ import {
     Button,
 } from "@chakra-ui/react"
 import * as ApiClient from "./services/ApiClient.js"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import DrawerContainer from "./components/DrawerContainer.jsx"
 import {
     errorToastNotification,
     successToastNotification,
 } from "./services/UiNotificationProvider.js"
 import CustomerForm from "./components/CustomerForm.jsx"
-import ToggleDrawerButton from "./components/shared/ToggleDrawerButton.jsx"
 
 function App() {
     const [customers, setCustomers] = useState([])
@@ -39,32 +38,21 @@ function App() {
 
     useEffect(() => fetchCustomers(), [])
 
-    function handleSubmit(
-        values,
-        setSubmitting,
-        submitFunction,
-        successMessage
-    ) {
+    function onCreateFormSubmit(values, { setSubmitting }) {
         setSubmitting(true)
-        submitFunction(values)
-            .then((_) => {
-                successToastNotification("Success", successMessage)
+        ApiClient.saveCustomer(values)
+            .then(() => {
+                successToastNotification(
+                    "Success",
+                    "Customer created successfully"
+                )
                 fetchCustomers()
-                onClose()
+                onDrawerClose()
             })
             .catch((error) =>
                 errorToastNotification(error.code, error.response.data.message)
             )
             .finally(() => setSubmitting(false))
-    }
-
-    function onCreateFormSubmit(values, { setSubmitting }) {
-        handleSubmit(
-            values,
-            setSubmitting,
-            ApiClient.saveCustomer,
-            "Customer created successfully"
-        )
     }
 
     if (isLoading) {
@@ -114,7 +102,6 @@ function App() {
     return (
         <Sidebar>
             <Button
-                leftIcon={"+"}
                 colorScheme={"teal"}
                 variant={"solid"}
                 onClick={onDrawerOpen}
@@ -137,15 +124,11 @@ function App() {
                 />
             </DrawerContainer>
             <Wrap spacingX="3vw" justify="center">
-                {customers.map((customer, index) => (
-                    <WrapItem key={index}>
+                {customers.map((customer) => (
+                    <WrapItem key={customer.id}>
                         <CustomerCard
-                            handleSubmit={handleSubmit}
-                            id={customer.id}
-                            age={customer.age}
-                            email={customer.email}
-                            gender={customer.gender}
-                            name={customer.name}
+                            fetchCustomers={fetchCustomers}
+                            {...customer}
                         />
                     </WrapItem>
                 ))}
