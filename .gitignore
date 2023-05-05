@@ -35,3 +35,5 @@
 /backend/.mvn/
 /backend/.mvnw
 /backend/.mvnw.cmd
+
+**/.vite/
