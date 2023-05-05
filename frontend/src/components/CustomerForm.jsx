@@ -1,63 +1,15 @@
-import { Formik, Form, useField } from "formik"
+import { Formik, Form } from "formik"
 import * as Yup from "yup"
-import {
-    Alert,
-    AlertIcon,
-    Button,
-    FormLabel,
-    Input,
-    Select,
-    Stack,
-} from "@chakra-ui/react"
-import * as ApiClient from "../services/ApiClient.js"
-import {
-    successToastNotification,
-    errorToastNotification,
-} from "../services/UiNotificationProvider.js"
+import { Button, Stack } from "@chakra-ui/react"
+import MyTextInput from "./shared/MyInput.jsx"
+import MySelect from "./shared/MySelect.jsx"
 
-const MyTextInput = ({ label, ...props }) => {
-    const [field, meta] = useField(props)
-    return (
-        <>
-            <FormLabel htmlFor={props.id || props.name}>{label}</FormLabel>
-            <Input className="text-input" {...field} {...props} />
-            {meta.touched && meta.error ? (
-                <Alert className="error" status={"error"} mt={2}>
-                    <AlertIcon />
-                    {meta.error}
-                </Alert>
-            ) : null}
-        </>
-    )
-}
-
-const MySelect = ({ label, ...props }) => {
-    const [field, meta] = useField(props)
-    return (
-        <>
-            <FormLabel htmlFor={props.id || props.name}>{label}</FormLabel>
-            <Select {...field} {...props} />
-            {meta.touched && meta.error ? (
-                <Alert className="error" status={"error"} mt={2}>
-                    <AlertIcon />
-                    {meta.error}
-                </Alert>
-            ) : null}
-        </>
-    )
-}
-
-export default function CreateCustomerForm({ fetchCustomers, onClose }) {
+export default function CustomerForm({ initialValues, onFormSubmit }) {
     return (
         <>
             <Formik
                 validateOnMount={true}
-                initialValues={{
-                    name: "",
-                    email: "",
-                    age: "",
-                    gender: "",
-                }}
+                initialValues={initialValues}
                 validationSchema={Yup.object({
                     name: Yup.string()
                         .max(15, "Must be 15 characters or less")
@@ -73,25 +25,7 @@ export default function CreateCustomerForm({ fetchCustomers, onClose }) {
                         .oneOf(["male", "female"], "Invalid Gender")
                         .required("Required"),
                 })}
-                onSubmit={(values, { setSubmitting }) => {
-                    setSubmitting(true)
-                    ApiClient.saveCustomer(values)
-                        .then((_) => {
-                            successToastNotification(
-                                "Success",
-                                "Customer created successfully"
-                            )
-                            fetchCustomers()
-                            onClose()
-                        })
-                        .catch((error) =>
-                            errorToastNotification(
-                                error.code,
-                                error.response.data.message
-                            )
-                        )
-                        .finally(() => setSubmitting(false))
-                }}
+                onSubmit={onFormSubmit}
             >
                 {({ isValid, isSubmitting }) => (
                     <Form>

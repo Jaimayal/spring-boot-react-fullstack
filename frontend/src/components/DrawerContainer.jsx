@@ -9,35 +9,26 @@ import {
     DrawerOverlay,
     useDisclosure,
 } from "@chakra-ui/react"
-import CreateCustomerForm from "./CreateCustomerForm"
+import ToggleDrawerButton from "./shared/ToggleDrawerButton"
 
 const AddIcon = () => "+"
 const CloseIcon = () => "X"
 
-export default function DrawerFormContainer({ fetchCustomers }) {
-    const { isOpen, onOpen, onClose } = useDisclosure()
+export default function DrawerContainer({
+    header,
+    children,
+    isOpen,
+    onOpen,
+    onClose,
+}) {
     return (
         <>
-            <Button
-                leftIcon={<AddIcon />}
-                colorScheme={"teal"}
-                variant={"solid"}
-                onClick={onOpen}
-            >
-                Create Customer
-            </Button>
             <Drawer isOpen={isOpen} onClose={onClose} size={"xl"}>
                 <DrawerOverlay />
                 <DrawerContent>
                     <DrawerCloseButton />
-                    <DrawerHeader>Create Customer</DrawerHeader>
-
-                    <DrawerBody>
-                        <CreateCustomerForm
-                            fetchCustomers={fetchCustomers}
-                            onClose={onClose}
-                        />
-                    </DrawerBody>
+                    <DrawerHeader>{header}</DrawerHeader>
+                    <DrawerBody>{children}</DrawerBody>
                     <DrawerFooter>
                         <Button
                             leftIcon={<CloseIcon />}

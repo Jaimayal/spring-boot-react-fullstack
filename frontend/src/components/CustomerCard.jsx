@@ -24,7 +24,9 @@ import {
     errorToastNotification,
     successToastNotification,
 } from "../services/UiNotificationProvider.js"
-import UpdateFormContainer from "./UpdateFormContainer"
+import DrawerContainer from "./DrawerContainer.jsx"
+import CustomerForm from "./CustomerForm.jsx"
+import ToggleDrawerButton from "./shared/ToggleDrawerButton.jsx"
 
 export default function CustomerCard({
     id,
@@ -32,15 +34,20 @@ export default function CustomerCard({
     email,
     age,
     gender,
-    fetchCustomers,
+    handleSubmit,
 }) {
     const pictureGender = gender === "male" ? "men" : "women"
     const {
-        isOpen,
-        onOpen: openDeleteDialog,
-        onClose: closeDeleteDialog,
+        isOpen: isDeleteDialogOpen,
+        onOpen: onOpenDeleteDialog,
+        onClose: onCloseDeleteDialog,
     } = useDisclosure()
     const cancelRef = useRef()
+    const {
+        isOpen: isDrawerOpen,
+        onOpen: onDrawerOpen,
+        onClose: onDrawerClose,
+    } = useDisclosure()
 
     function deleteCustomer(customerId) {
         ApiClient.deleteCustomer(customerId)
@@ -56,8 +63,17 @@ export default function CustomerCard({
                 errorToastNotification(error.code, error.response.data.message)
             })
             .finally(() => {
-                closeDeleteDialog()
+                onCloseDeleteDialog()
             })
+    }
+
+    function onUpdateFormSubmit(values, { setSubmitting }) {
+        handleSubmit(
+            values,
+            setSubmitting,
+            (values) => ApiClient.updateCustomer(id, values),
+            "Customer updated successfully"
+        )
     }
 
     return (
@@ -110,14 +126,14 @@ export default function CustomerCard({
                             variant={"solid"}
                             rounded={"full"}
                             width={"full"}
-                            onClick={() => openDeleteDialog()}
+                            onClick={onOpenDeleteDialog}
                         >
                             Delete
                         </Button>
                         <AlertDialog
-                            isOpen={isOpen}
+                            isOpen={isDeleteDialogOpen}
                             leastDestructiveRef={cancelRef}
-                            onClose={closeDeleteDialog}
+                            onClose={onCloseDeleteDialog}
                         >
                             <AlertDialogOverlay>
                                 <AlertDialogContent>
@@ -136,7 +152,7 @@ export default function CustomerCard({
                                     <AlertDialogFooter>
                                         <Button
                                             ref={cancelRef}
-                                            onClick={closeDeleteDialog}
+                                            onClick={onCloseDeleteDialog}
                                         >
                                             Cancel
                                         </Button>
@@ -151,16 +167,30 @@ export default function CustomerCard({
                                 </AlertDialogContent>
                             </AlertDialogOverlay>
                         </AlertDialog>
-                        <UpdateFormContainer
-                            fetchCustomers={fetchCustomers}
-                            customer={{
-                                id,
-                                name,
-                                email,
-                                age,
-                                gender,
-                            }}
-                        />
+                        <Button
+                            colorScheme={"yellow"}
+                            variant={"solid"}
+                            rounded={"full"}
+                            width={"full"}
+                            onClick={onDrawerOpen}
+                        >
+                            Update
+                        </Button>
+                        <DrawerContainer
+                            header={`Updating ${name}`}
+                            isOpen={isDrawerOpen}
+                            onClose={onDrawerClose}
+                        >
+                            <CustomerForm
+                                initialValues={{
+                                    name,
+                                    email,
+                                    age,
+                                    gender,
+                                }}
+                                onSubmit={onUpdateFormSubmit}
+                            />
+                        </DrawerContainer>
                     </Stack>
                 </Box>
             </Box>
