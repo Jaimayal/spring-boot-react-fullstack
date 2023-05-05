@@ -3,7 +3,7 @@
   "containerDefinitions": [
     {
       "name": "customers-api",
-      "image": "jaimayal/customers-api:02.05.2023.22.01.05",
+      "image": "jaimayal/customers-api:05.05.2023.15.33.59",
       "essential": true,
       "memory": 512,
       "portMappings": [
