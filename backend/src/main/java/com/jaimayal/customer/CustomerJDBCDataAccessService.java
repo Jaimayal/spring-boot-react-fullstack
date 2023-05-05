@@ -24,6 +24,7 @@ public class CustomerJDBCDataAccessService implements CustomerDao {
         String sql = """
                 SELECT id, name, email, age, gender
                 FROM customer
+                ORDER BY id
                 """;
         
         return jdbcTemplate.query(sql, customerRowMapper);
