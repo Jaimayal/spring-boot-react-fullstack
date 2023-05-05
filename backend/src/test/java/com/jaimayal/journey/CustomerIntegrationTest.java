@@ -191,6 +191,7 @@ public class CustomerIntegrationTest {
         
         // PUT customer modified
         Customer modified = ENTITY_FAKER.getCustomer();
+        modified.setAge(previous.getAge()+1);
         webTestClient.put()
                 .uri(API_URI + "/{id}", id)
                 .body(Mono.just(modified), Customer.class)
