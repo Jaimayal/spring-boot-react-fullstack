@@ -25,6 +25,14 @@ services:
       - db
     command:
       - "--spring.datasource.url=jdbc:postgresql://db:5432/customer"
+  customers-frontend:
+    container_name: customers-frontend
+    image: jaimayal/customers-frontend
+    ports:
+      - "3000:5173"
+    restart: unless-stopped
+    depends_on:
+      - customers-api
 
 networks:
   postgres:
