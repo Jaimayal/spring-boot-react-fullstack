@@ -21,7 +21,7 @@
     },
     {
       "name": "customers-frontend",
-      "image": "jaimayal/customers-frontend:latest",
+      "image": "jaimayal/customers-frontend:06.05.2023.01.45.37",
       "essential": true,
       "memory": 256,
       "portMappings": [
