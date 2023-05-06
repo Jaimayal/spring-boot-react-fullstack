@@ -1,6 +1,6 @@
 package com.jaimayal.customer;
 
-import com.jaimayal.security.JwtUtils;
+import com.jaimayal.security.JwtService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,12 +19,12 @@ import java.util.List;
 public class CustomerController {
     
     private final CustomerService customerService;
-    private final JwtUtils jwtUtils;
+    private final JwtService jwtService;
     
     public CustomerController(CustomerService customerService, 
-                              JwtUtils jwtUtils) {
+                              JwtService jwtService) {
         this.customerService = customerService;
-        this.jwtUtils = jwtUtils;
+        this.jwtService = jwtService;
     }
     
     @GetMapping
@@ -40,9 +40,9 @@ public class CustomerController {
     @PostMapping
     public ResponseEntity<?> createCustomer(@RequestBody CustomerRegistrationRequest customerRegistrationRequest) {
         customerService.createCustomer(customerRegistrationRequest);
-        String token = jwtUtils.issueToken(customerRegistrationRequest.email(), "ROLE_USER");
+        String token = jwtService.issueToken(customerRegistrationRequest.email(), "ROLE_USER");
         return ResponseEntity.ok()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .header(HttpHeaders.AUTHORIZATION, token)
                 .build();
     }
     

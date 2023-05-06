@@ -18,3 +18,7 @@ jwt:
   issuer: "https://jaimayal.github.io"
   expiration-seconds: 3600
   secret: "847a0778-0a83-43b1-ba2f-55c83126229f"
+  
+logging:
+  level:
+    root: INFO

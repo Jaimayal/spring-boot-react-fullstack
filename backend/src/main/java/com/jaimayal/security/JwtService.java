@@ -1,19 +1,19 @@
 package com.jaimayal.security;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Map;
 
-@Component
-public class JwtUtils {
+@Service
+public class JwtService {
     
     @Value("${jwt.secret}")
     private String secret;
@@ -47,7 +47,23 @@ public class JwtUtils {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
     
+    public String getSubject(String token) {
+        return this.getClaims(token).getOrDefault("sub", "").toString();
+    }
+
+    private Claims getClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(this.getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
     
+    public boolean isValid(String token, String username) {
+        return this.getSubject(token).equals(username) && !this.isExpired(token);
+    }
     
-    
+    private boolean isExpired(String token) {
+        return this.getClaims(token).getExpiration().before(Date.from(Instant.now()));
+    }
 }
