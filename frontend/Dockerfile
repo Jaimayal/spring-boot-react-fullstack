@@ -1,7 +1,7 @@
 FROM node:20-alpine
 ARG BASE_URL
 WORKDIR /app
-COPY package*.json .
+COPY package*.json ./
 RUN npm i --silent
 COPY . .
 RUN echo "API_BASE_URL=${BASE_URL}" > .env
