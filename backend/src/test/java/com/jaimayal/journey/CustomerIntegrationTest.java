@@ -31,7 +31,7 @@ public class CustomerIntegrationTest {
         CustomerRegistrationRequest request = new CustomerRegistrationRequest(
                 expected.getName(),
                 expected.getEmail(),
-                expected.getAge(),
+                "password", expected.getAge(),
                 expected.getGender()
         );
         
@@ -88,7 +88,7 @@ public class CustomerIntegrationTest {
         CustomerRegistrationRequest request = new CustomerRegistrationRequest(
                 expected.getName(),
                 expected.getEmail(),
-                expected.getAge(),
+                "password", expected.getAge(),
                 expected.getGender()
         );
 
@@ -150,7 +150,7 @@ public class CustomerIntegrationTest {
         CustomerRegistrationRequest request = new CustomerRegistrationRequest(
                 previous.getName(),
                 previous.getEmail(),
-                previous.getAge(),
+                "password", previous.getAge(),
                 previous.getGender()
         );
 

@@ -37,6 +37,7 @@ class CustomerRowMapperTest {
         when(resultSet.getLong("id")).thenReturn(expected.getId());
         when(resultSet.getString("name")).thenReturn(expected.getName());
         when(resultSet.getString("email")).thenReturn(expected.getEmail());
+        when(resultSet.getString("password")).thenReturn(expected.getPassword());
         when(resultSet.getInt("age")).thenReturn(expected.getAge());
         when(resultSet.getString("gender")).thenReturn(expected.getGender());
         

@@ -5,6 +5,7 @@ import com.jaimayal.exception.InvalidResourceException;
 import com.jaimayal.exception.InvalidResourceUpdatesException;
 import com.jaimayal.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,9 +14,12 @@ import java.util.List;
 public class CustomerService {
     
     private final CustomerDao customerDao;
+    private final PasswordEncoder passwordEncoder;
 
-    public CustomerService(@Qualifier("jdbc") CustomerDao customerDao) {
+    public CustomerService(@Qualifier("jdbc") CustomerDao customerDao, 
+                           PasswordEncoder passwordEncoder) {
         this.customerDao = customerDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Customer> getCustomers() {
@@ -35,6 +39,7 @@ public class CustomerService {
         customerDao.insertCustomer(new Customer(
                 customer.name(),
                 customer.email(),
+                passwordEncoder.encode(customer.password()),
                 customer.age(),
                 customer.gender()));
     }
@@ -62,6 +67,11 @@ public class CustomerService {
         if (update.getGender() != null && !update.getGender().equals(customerToUpdate.getGender())) {
             this.checkIfGenderIsValid(update.getGender());
             customerToUpdate.setGender(update.getGender());
+            updates = true;
+        }
+        
+        if (update.getPassword() != null && !passwordEncoder.matches(update.getPassword(), customerToUpdate.getPassword())) {
+            customerToUpdate.setPassword(passwordEncoder.encode(update.getPassword()));
             updates = true;
         }
         

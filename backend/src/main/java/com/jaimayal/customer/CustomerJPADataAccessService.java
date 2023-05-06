@@ -48,4 +48,9 @@ public class CustomerJPADataAccessService implements CustomerDao {
     public void deleteCustomerById(Long customerId) {
         customerRepository.deleteById(customerId);
     }
+
+    @Override
+    public Optional<Customer> selectCustomerByEmail(String email) {
+        return customerRepository.findCustomerByEmail(email);
+    }
 }

@@ -11,8 +11,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -26,10 +28,12 @@ class CustomerServiceTest {
     private CustomerService underTest;
     @Mock
     private CustomerDao customerDao;
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void setUp() {
-        this.underTest = new CustomerService(customerDao);
+        this.underTest = new CustomerService(customerDao, passwordEncoder);
     }
 
     @Test
@@ -89,11 +93,14 @@ class CustomerServiceTest {
         CustomerRegistrationRequest registration = new CustomerRegistrationRequest(
                 fakeCustomer.getName(),
                 fakeCustomer.getEmail(),
+                "password", 
                 fakeCustomer.getAge(),
                 fakeCustomer.getGender()
         );
-        when(customerDao.existsCustomerByEmail(anyString())).thenReturn(false);
         
+        String hashedPassword = UUID.randomUUID().toString();
+        when(customerDao.existsCustomerByEmail(anyString())).thenReturn(false);
+        when(passwordEncoder.encode(anyString())).thenReturn(hashedPassword);
         // When
         underTest.createCustomer(registration);
         
@@ -104,6 +111,7 @@ class CustomerServiceTest {
         
         assertThat(capturedCustomer.getName()).isEqualTo(registration.name());
         assertThat(capturedCustomer.getEmail()).isEqualTo(registration.email());
+        assertThat(capturedCustomer.getPassword()).isEqualTo(hashedPassword);
         assertThat(capturedCustomer.getAge()).isEqualTo(registration.age());
     }
     
@@ -114,7 +122,7 @@ class CustomerServiceTest {
         CustomerRegistrationRequest registration = new CustomerRegistrationRequest(
                 fakeCustomer.getName(),
                 fakeCustomer.getEmail(),
-                fakeCustomer.getAge(),
+                "password", fakeCustomer.getAge(),
                 fakeCustomer.getGender()
         );
         when(customerDao.existsCustomerByEmail(anyString())).thenReturn(true);
@@ -141,6 +149,8 @@ class CustomerServiceTest {
                 .thenReturn(Optional.of(previous));
         when(customerDao.existsCustomerByEmail(updated.getEmail()))
                 .thenReturn(false);
+        when(passwordEncoder.matches(any(), any())).thenReturn(false);
+        when(passwordEncoder.encode(any())).thenReturn("password");
         
         // When
         underTest.updateCustomer(previousId, updated);
@@ -152,6 +162,7 @@ class CustomerServiceTest {
         
         assertThat(customerCaptured.getName()).isEqualTo(updated.getName());
         assertThat(customerCaptured.getEmail()).isEqualTo(updated.getEmail());
+        assertThat(customerCaptured.getPassword()).isEqualTo(updated.getPassword());
         assertThat(customerCaptured.getAge()).isEqualTo(updated.getAge());
         assertThat(customerCaptured.getGender()).isEqualTo(updated.getGender());
     }
@@ -163,8 +174,8 @@ class CustomerServiceTest {
         String updatedName = previous.getName() + "UPDATED";
         Customer updated = new Customer(
                 updatedName,
-                previous.getEmail(), 
-                previous.getAge(),
+                previous.getEmail(),
+                "password", previous.getAge(),
                 previous.getGender());
         Long previousId = ENTITY_FAKER.getId();
 
@@ -193,7 +204,7 @@ class CustomerServiceTest {
         Customer updated = new Customer(
                 previous.getName(), 
                 updatedEmail,
-                previous.getAge(),
+                "password", previous.getAge(),
                 previous.getGender());
         Long previousId = ENTITY_FAKER.getId();
 
@@ -224,7 +235,7 @@ class CustomerServiceTest {
         Customer updated = new Customer(
                 previous.getName(),
                 previous.getEmail(),
-                updatedAge,
+                "password", updatedAge,
                 previous.getGender());
         Long previousId = ENTITY_FAKER.getId();
 
@@ -253,7 +264,7 @@ class CustomerServiceTest {
         Customer updated = new Customer(
                 previous.getName(),
                 previous.getEmail(),
-                previous.getAge(), 
+                "password", previous.getAge(), 
                 updatedGender);
         Long previousId = ENTITY_FAKER.getId();
 
@@ -299,7 +310,7 @@ class CustomerServiceTest {
         Customer updated = new Customer(
                 previous.getName(),
                 updatedEmail,
-                previous.getAge(),
+                "password", previous.getAge(),
                 previous.getGender());
         Long previousId = ENTITY_FAKER.getId();
 
@@ -324,13 +335,16 @@ class CustomerServiceTest {
         Customer updated = new Customer(
                 previous.getName(),
                 previous.getEmail(),
+                "password",
                 previous.getAge(),
                 previous.getGender());
         Long previousId = ENTITY_FAKER.getId();
 
         when(customerDao.selectCustomerById(previousId))
                 .thenReturn(Optional.of(previous));
-
+        when(passwordEncoder.matches(any(), any()))
+                .thenReturn(true);
+        
         // When
         assertThatThrownBy(() -> underTest.updateCustomer(previousId, updated))
                 .isInstanceOf(InvalidResourceUpdatesException.class)
@@ -348,7 +362,7 @@ class CustomerServiceTest {
         Customer updated = new Customer(
                 previous.getName(),
                 previous.getEmail(),
-                previous.getAge(),
+                "password", previous.getAge(),
                 invalidGender);
         Long previousId = ENTITY_FAKER.getId();
 
