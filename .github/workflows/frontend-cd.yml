@@ -33,16 +33,16 @@ jobs:
       - name: Docker push
         run: docker push jaimayal/customers-frontend:${{steps.build-number.outputs.BUILD_NUMBER}}
       - name: Update Dockerrun.aws.json image tag with Build Number
-          run: |
+        run: |
             echo "Dockerrun.aws.json before updating Docker Image Tag"
             cat ../Dockerrun.aws.json
             sed -i -E 's_(jaimayal/customers-frontend:)([^"]*)_\1'${{steps.build-number.outputs.BUILD_NUMBER}}'_' ../Dockerrun.aws.json
             echo "Dockerrun.aws.json after updating Docker Image Tag"
             cat ../Dockerrun.aws.json
       - name: Deploying new Dockerrun.aws.json to AWS Elastic Beanstalk
-          run: echo "TODO"
+        run: echo "TODO"
       - name: Commit and Push updated Dockerrun.aws.json
-          run: |
+        run: |
             git config user.name github-actions
             git config user.email github-actions@github.com
             git add ../Dockerrun.aws.json
