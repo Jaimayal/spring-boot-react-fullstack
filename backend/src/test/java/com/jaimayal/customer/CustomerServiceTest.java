@@ -1,6 +1,6 @@
 package com.jaimayal.customer;
 
-import com.jaimayal.CustomEntityFaker;
+import com.jaimayal.utils.CustomEntityFaker;
 import com.jaimayal.exception.DuplicatedResourceException;
 import com.jaimayal.exception.InvalidResourceException;
 import com.jaimayal.exception.InvalidResourceUpdatesException;

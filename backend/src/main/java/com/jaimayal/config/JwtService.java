@@ -1,4 +1,4 @@
-package com.jaimayal.security;
+package com.jaimayal.config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

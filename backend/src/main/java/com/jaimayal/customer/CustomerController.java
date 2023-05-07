@@ -1,6 +1,6 @@
 package com.jaimayal.customer;
 
-import com.jaimayal.security.JwtService;
+import com.jaimayal.config.JwtService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -49,8 +49,8 @@ public class CustomerController {
     }
     
     @PutMapping("/{customerId}")
-    public ResponseEntity<?> updateCustomer(@PathVariable Long customerId,
-                               @RequestBody CustomerUpdateDTO customer) {
+    public ResponseEntity<?> updateCustomer(@PathVariable Long customerId, 
+                                            @RequestBody CustomerUpdateDTO customer) {
         customerService.updateCustomer(customerId, customer);
         return ResponseEntity.ok().build();
     }

@@ -1,10 +1,10 @@
 package com.jaimayal.config;
 
-import com.jaimayal.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -30,6 +30,7 @@ public class SecurityFilterChainConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf().disable()
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(
                         requestRegistry -> requestRegistry
                                 .requestMatchers(HttpMethod.POST, "/api/v1/customers")
