@@ -28,11 +28,14 @@ public class SecurityFilterChainConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        System.out.println(jwtAuthenticationFilter);
         return http
                 .csrf().disable()
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(
                         requestRegistry -> requestRegistry
+                                .requestMatchers(HttpMethod.POST, "api/v1/auth/*")
+                                .permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/v1/customers")
                                 .permitAll()
                                 .anyRequest()
