@@ -63,7 +63,7 @@ public class JwtService {
         return this.getSubject(token).equals(username) && !this.isExpired(token);
     }
     
-    private boolean isExpired(String token) {
+    public boolean isExpired(String token) {
         return this.getClaims(token).getExpiration().before(Date.from(Instant.now()));
     }
 }

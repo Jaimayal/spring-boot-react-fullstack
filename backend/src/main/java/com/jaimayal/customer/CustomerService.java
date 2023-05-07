@@ -9,25 +9,32 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerService {
     
     private final CustomerDao customerDao;
     private final PasswordEncoder passwordEncoder;
+    private final CustomerDTOMapper customerDTOMapper;
 
-    public CustomerService(@Qualifier("jdbc") CustomerDao customerDao, 
-                           PasswordEncoder passwordEncoder) {
+    public CustomerService(@Qualifier("jdbc") CustomerDao customerDao,
+                           PasswordEncoder passwordEncoder, 
+                           CustomerDTOMapper customerDTOMapper) {
         this.customerDao = customerDao;
         this.passwordEncoder = passwordEncoder;
+        this.customerDTOMapper = customerDTOMapper;
     }
 
-    public List<Customer> getCustomers() {
-        return customerDao.selectAllCustomers();
+    public List<CustomerDTO> getCustomers() {
+        return customerDao.selectAllCustomers().stream()
+                .map(customerDTOMapper)
+                .collect(Collectors.toList());
     }
 
-    public Customer getCustomer(Long customerId) {
+    public CustomerDTO getCustomer(Long customerId) {
         return customerDao.selectCustomerById(customerId)
+                .map(customerDTOMapper)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Customer with ID [" + customerId + "] not found"
                 ));
@@ -44,34 +51,37 @@ public class CustomerService {
                 customer.gender()));
     }
 
-    public void updateCustomer(Long customerId, Customer update) {
-        Customer customerToUpdate = this.getCustomer(customerId);
+    public void updateCustomer(Long customerId, CustomerUpdateDTO update) {
+        Customer customerToUpdate = customerDao.selectCustomerById(customerId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Customer with ID [" + customerId + "] not found"
+                ));
         
         boolean updates = false;
-        if (update.getName() != null && !update.getName().equals(customerToUpdate.getName())) {
-            customerToUpdate.setName(update.getName());
+        if (update.name() != null && !update.name().equals(customerToUpdate.getName())) {
+            customerToUpdate.setName(update.name());
             updates = true;
         }
         
-        if (update.getAge() != null && !update.getAge().equals(customerToUpdate.getAge())) {
-            customerToUpdate.setAge(update.getAge());
+        if (update.age() != null && !update.age().equals(customerToUpdate.getAge())) {
+            customerToUpdate.setAge(update.age());
             updates = true;
         }
 
-        if (update.getEmail() != null && !update.getEmail().equals(customerToUpdate.getEmail())) {
-            this.checkIfIsEmailTaken(update.getEmail());
-            customerToUpdate.setEmail(update.getEmail());
+        if (update.email() != null && !update.email().equals(customerToUpdate.getEmail())) {
+            this.checkIfIsEmailTaken(update.email());
+            customerToUpdate.setEmail(update.email());
             updates = true;
         }
         
-        if (update.getGender() != null && !update.getGender().equals(customerToUpdate.getGender())) {
-            this.checkIfGenderIsValid(update.getGender());
-            customerToUpdate.setGender(update.getGender());
+        if (update.gender() != null && !update.gender().equals(customerToUpdate.getGender())) {
+            this.checkIfGenderIsValid(update.gender());
+            customerToUpdate.setGender(update.gender());
             updates = true;
         }
         
-        if (update.getPassword() != null && !passwordEncoder.matches(update.getPassword(), customerToUpdate.getPassword())) {
-            customerToUpdate.setPassword(passwordEncoder.encode(update.getPassword()));
+        if (update.password() != null && !passwordEncoder.matches(update.password(), customerToUpdate.getPassword())) {
+            customerToUpdate.setPassword(passwordEncoder.encode(update.password()));
             updates = true;
         }
         

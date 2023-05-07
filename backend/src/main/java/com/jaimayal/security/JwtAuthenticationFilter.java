@@ -1,5 +1,6 @@
 package com.jaimayal.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,6 +41,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         String token = authHeader.replace("Bearer ", "");
+
+        try {
+            jwtService.isExpired(token);
+        } catch (ExpiredJwtException e) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Token expired");
+            return;
+        }
+        
         String subject = jwtService.getSubject(token);
         if (subject != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(subject);

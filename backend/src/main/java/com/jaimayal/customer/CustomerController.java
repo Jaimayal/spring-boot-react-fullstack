@@ -28,13 +28,15 @@ public class CustomerController {
     }
     
     @GetMapping
-    public List<Customer> getCustomers() {
-        return customerService.getCustomers();
+    public ResponseEntity<?> getCustomers() {
+        List<CustomerDTO> customers = customerService.getCustomers();
+        return ResponseEntity.ok(customers);
     }
     
     @GetMapping("/{customerId}")
-    public Customer getCustomer(@PathVariable Long customerId) {
-        return customerService.getCustomer(customerId);
+    public ResponseEntity<?> getCustomer(@PathVariable Long customerId) {
+        CustomerDTO customer = customerService.getCustomer(customerId);
+        return ResponseEntity.ok(customer);
     }
     
     @PostMapping
@@ -47,13 +49,15 @@ public class CustomerController {
     }
     
     @PutMapping("/{customerId}")
-    public void updateCustomer(@PathVariable Long customerId,
-                               @RequestBody Customer customer) {
+    public ResponseEntity<?> updateCustomer(@PathVariable Long customerId,
+                               @RequestBody CustomerUpdateDTO customer) {
         customerService.updateCustomer(customerId, customer);
+        return ResponseEntity.ok().build();
     }
     
     @DeleteMapping("/{customerId}")
-    public void deleteCustomer(@PathVariable Long customerId) {
+    public ResponseEntity<?> deleteCustomer(@PathVariable Long customerId) {
         customerService.deleteCustomer(customerId);
+        return ResponseEntity.noContent().build();
     }
 }
