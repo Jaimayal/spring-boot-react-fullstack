@@ -35,6 +35,6 @@ public class AuthenticationService {
         Customer principal = (Customer) authentication.getPrincipal();
         CustomerDTO dto = customerDTOMapper.apply(principal);
         String token = jwtService.issueToken(dto.email(), "ROLE_USER");
-        return new AuthenticationResponse(token, dto);
+        return new AuthenticationResponse(token);
     }
 }
