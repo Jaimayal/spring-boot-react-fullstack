@@ -1,9 +1,9 @@
 package com.jaimayal.customer;
 
-public record CustomerRegistrationRequest(
+public record CustomerUpdateDTO (
         String name,
         String email,
-        String password, 
-        Integer age,
+        String password,
+        Integer age, 
         String gender
 ) {}

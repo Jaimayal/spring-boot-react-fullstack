@@ -14,9 +14,10 @@ public class CustomerRowMapper implements RowMapper<Customer> {
         Long customerId = resultSet.getLong("id");
         String name = resultSet.getString("name");
         String email = resultSet.getString("email");
+        String password = resultSet.getString("password");
         Integer age = resultSet.getInt("age");
         String gender = resultSet.getString("gender");
         
-        return new Customer(customerId, name, email, age, gender);
+        return new Customer(customerId, name, email, password, age, gender);
     }
 }

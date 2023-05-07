@@ -1,5 +1,6 @@
 package com.jaimayal;
 
+import com.jaimayal.utils.CustomEntityFaker;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.MigrationState;
 import org.junit.jupiter.api.BeforeAll;

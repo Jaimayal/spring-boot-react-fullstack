@@ -1,5 +1,8 @@
 package com.jaimayal.customer;
 
+import com.jaimayal.config.JwtService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,34 +19,45 @@ import java.util.List;
 public class CustomerController {
     
     private final CustomerService customerService;
+    private final JwtService jwtService;
     
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(CustomerService customerService, 
+                              JwtService jwtService) {
         this.customerService = customerService;
+        this.jwtService = jwtService;
     }
     
     @GetMapping
-    public List<Customer> getCustomers() {
-        return customerService.getCustomers();
+    public ResponseEntity<?> getCustomers() {
+        List<CustomerDTO> customers = customerService.getCustomers();
+        return ResponseEntity.ok(customers);
     }
     
     @GetMapping("/{customerId}")
-    public Customer getCustomer(@PathVariable Long customerId) {
-        return customerService.getCustomer(customerId);
+    public ResponseEntity<?> getCustomer(@PathVariable Long customerId) {
+        CustomerDTO customer = customerService.getCustomer(customerId);
+        return ResponseEntity.ok(customer);
     }
     
     @PostMapping
-    public void createCustomer(@RequestBody CustomerRegistrationRequest customerRegistrationRequest) {
+    public ResponseEntity<?> createCustomer(@RequestBody CustomerRegistrationRequest customerRegistrationRequest) {
         customerService.createCustomer(customerRegistrationRequest);
+        String token = jwtService.issueToken(customerRegistrationRequest.email(), "ROLE_USER");
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .build();
     }
     
     @PutMapping("/{customerId}")
-    public void updateCustomer(@PathVariable Long customerId,
-                               @RequestBody Customer customer) {
+    public ResponseEntity<?> updateCustomer(@PathVariable Long customerId, 
+                                            @RequestBody CustomerUpdateDTO customer) {
         customerService.updateCustomer(customerId, customer);
+        return ResponseEntity.ok().build();
     }
     
     @DeleteMapping("/{customerId}")
-    public void deleteCustomer(@PathVariable Long customerId) {
+    public ResponseEntity<?> deleteCustomer(@PathVariable Long customerId) {
         customerService.deleteCustomer(customerId);
+        return ResponseEntity.noContent().build();
     }
 }
