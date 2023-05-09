@@ -1,8 +1,8 @@
 import { Formik, Form } from "formik"
 import * as Yup from "yup"
 import { Button, Stack } from "@chakra-ui/react"
-import MyTextInput from "./shared/MyInput.jsx"
-import MySelect from "./shared/MySelect.jsx"
+import MyTextInput from "../shared/MyTextInput.jsx"
+import MySelect from "../shared/MySelect.jsx"
 
 export default function CustomerForm({ initialValues, onFormSubmit }) {
     return (
@@ -16,6 +16,10 @@ export default function CustomerForm({ initialValues, onFormSubmit }) {
                         .required("Required"),
                     email: Yup.string()
                         .email("Invalid email address")
+                        .required("Required"),
+                    password: Yup.string()
+                        .max(30, "Must be 30 characters or less")
+                        .min(8, "Must be 8 characters or more")
                         .required("Required"),
                     age: Yup.number()
                         .min(18, "Must be 18 years or older")
@@ -42,6 +46,13 @@ export default function CustomerForm({ initialValues, onFormSubmit }) {
                                 name="email"
                                 type="email"
                                 placeholder="jane@gmail.com"
+                            />
+
+                            <MyTextInput
+                                label="Password"
+                                name="password"
+                                type="password"
+                                placeholder="********"
                             />
 
                             <MyTextInput
