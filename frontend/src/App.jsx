@@ -1,5 +1,5 @@
-import CustomerCard from "./components/CustomerCard"
-import Sidebar from "./components/Sidebar"
+import CustomerCard from "./components/dashboard/CustomerCard.jsx"
+import Sidebar from "./components/dashboard/Sidebar.jsx"
 import {
     Wrap,
     WrapItem,
@@ -10,12 +10,12 @@ import {
 } from "@chakra-ui/react"
 import * as ApiClient from "./services/ApiClient.js"
 import { useEffect, useState } from "react"
-import DrawerContainer from "./components/DrawerContainer.jsx"
+import DrawerContainer from "./components/dashboard/DrawerContainer.jsx"
 import {
     errorToastNotification,
     successToastNotification,
 } from "./services/UiNotificationProvider.js"
-import CustomerForm from "./components/CustomerForm.jsx"
+import CustomerForm from "./components/dashboard/CustomerForm.jsx"
 
 function App() {
     const [customers, setCustomers] = useState([])
@@ -63,6 +63,7 @@ function App() {
                         initialValues={{
                             name: "",
                             email: "",
+                            password: "",
                             age: "",
                             gender: "",
                         }}
@@ -88,6 +89,7 @@ function App() {
                         initialValues={{
                             name: "",
                             email: "",
+                            password: "",
                             age: "",
                             gender: "",
                         }}
@@ -117,6 +119,7 @@ function App() {
                     initialValues={{
                         name: "",
                         email: "",
+                        password: "",
                         age: "",
                         gender: "",
                     }}

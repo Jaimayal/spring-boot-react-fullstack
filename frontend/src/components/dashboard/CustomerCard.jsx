@@ -19,11 +19,11 @@ import {
     AlertDialog,
 } from "@chakra-ui/react"
 import { useRef } from "react"
-import * as ApiClient from "../services/ApiClient.js"
+import * as ApiClient from "../../services/ApiClient.js"
 import {
     errorToastNotification,
     successToastNotification,
-} from "../services/UiNotificationProvider.js"
+} from "../../services/UiNotificationProvider.js"
 import DrawerContainer from "./DrawerContainer.jsx"
 import CustomerForm from "./CustomerForm.jsx"
 
@@ -35,6 +35,7 @@ export default function CustomerCard({
     gender,
     fetchCustomers,
 }) {
+    const password = ""
     const pictureGender = gender === "male" ? "men" : "women"
     const {
         isOpen: isDeleteDialogOpen,
@@ -58,7 +59,6 @@ export default function CustomerCard({
                 )
             })
             .catch((error) => {
-                console.log(error)
                 errorToastNotification(error.code, error.response.data.message)
             })
             .finally(() => {
@@ -192,12 +192,12 @@ export default function CustomerCard({
                                 initialValues={{
                                     name,
                                     email,
+                                    password,
                                     age,
                                     gender,
                                 }}
                                 onFormSubmit={onUpdateFormSubmit}
                             />
-                            <p>H</p>
                         </DrawerContainer>
                     </Stack>
                 </Box>
