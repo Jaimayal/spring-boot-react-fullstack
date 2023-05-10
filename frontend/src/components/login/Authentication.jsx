@@ -1,13 +1,25 @@
-import { Flex, Heading, Stack, Image } from "@chakra-ui/react"
+import { Flex, Heading, Stack, Image, Link } from "@chakra-ui/react"
 import LoginForm from "./LoginForm.jsx"
+import { useAuth } from "../../context/AuthContext.jsx"
+import { useNavigate } from "react-router-dom"
+import { useEffect } from "react"
 
-export default function Login() {
+export default function Authentication({ title, children }) {
+    const { customer } = useAuth()
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (customer) {
+            navigate("/dashboard")
+        }
+    })
+
     return (
         <Stack minH={"100vh"} direction={{ base: "column", md: "row" }}>
             <Flex p={8} flex={1} align={"center"} justify={"center"}>
                 <Stack spacing={4} w={"full"} maxW={"md"}>
-                    <Heading fontSize={"2xl"}>Sign in to your account</Heading>
-                    <LoginForm />
+                    <Heading fontSize={"2xl"}>{title}</Heading>
+                    {children}
                 </Stack>
             </Flex>
             <Flex flex={1}>

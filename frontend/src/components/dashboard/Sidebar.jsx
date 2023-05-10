@@ -30,6 +30,7 @@ import {
     FiBell,
     FiChevronDown,
 } from "react-icons/fi"
+import { useAuth } from "../../context/AuthContext.jsx"
 
 const LinkItems = [
     { name: "Home", icon: FiHome },
@@ -141,6 +142,8 @@ const NavItem = ({ icon, children, ...rest }) => {
 }
 
 const MobileNav = ({ onOpen, ...rest }) => {
+    const { logoutAndClearLocalStorage, customer } = useAuth()
+
     return (
         <Flex
             ml={{ base: 0, md: 60 }}
@@ -197,10 +200,16 @@ const MobileNav = ({ onOpen, ...rest }) => {
                                     spacing="1px"
                                     ml="2"
                                 >
-                                    <Text fontSize="sm">Justina Clark</Text>
-                                    <Text fontSize="xs" color="gray.600">
-                                        Admin
-                                    </Text>
+                                    <Text fontSize="sm">{customer?.email}</Text>
+                                    {customer?.roles?.map((role, i) => (
+                                        <Text
+                                            key={i}
+                                            fontSize="xs"
+                                            color="gray.600"
+                                        >
+                                            {role}
+                                        </Text>
+                                    ))}
                                 </VStack>
                                 <Box display={{ base: "none", md: "flex" }}>
                                     <FiChevronDown />
@@ -218,7 +227,9 @@ const MobileNav = ({ onOpen, ...rest }) => {
                             <MenuItem>Settings</MenuItem>
                             <MenuItem>Billing</MenuItem>
                             <MenuDivider />
-                            <MenuItem>Sign out</MenuItem>
+                            <MenuItem onClick={logoutAndClearLocalStorage}>
+                                Sign out
+                            </MenuItem>
                         </MenuList>
                     </Menu>
                 </Flex>
