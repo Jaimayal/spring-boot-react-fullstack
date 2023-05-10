@@ -1,5 +1,5 @@
 import { useContext, createContext, useState, useEffect } from "react"
-import { login } from "../services/AuthClient.js"
+import * as AuthClient from "../services/AuthClient.js"
 import jwtDecode from "jwt-decode"
 
 const AuthContext = createContext({})
@@ -21,13 +21,31 @@ function AuthProvider({ children }) {
 
     const loginAndUpdateLocalStorage = async (authRequest) => {
         return new Promise((resolve, reject) => {
-            login(authRequest)
+            AuthClient.login(authRequest)
                 .then((response) => {
                     const token = response.headers["authorization"]
                     localStorage.setItem("access-token", token)
                     const { sub, scopes } = jwtDecode(token)
                     console.log(sub)
                     console.log(scopes)
+                    setCustomer({
+                        email: sub,
+                        roles: scopes,
+                    })
+                    resolve(response)
+                })
+                .catch((err) => reject(err))
+        })
+    }
+
+    const registerAndUpdateLocalStorage = async (registerRequest) => {
+        return new Promise((resolve, reject) => {
+            AuthClient.register(registerRequest)
+                .then((response) => {
+                    const token = response.headers["authorization"]
+                    localStorage.setItem("access-token", token)
+                    const { sub, scopes } = jwtDecode(token)
+                    console.log("Registered: ", sub)
                     setCustomer({
                         email: sub,
                         roles: scopes,
@@ -62,6 +80,7 @@ function AuthProvider({ children }) {
         <AuthContext.Provider
             value={{
                 customer,
+                registerAndUpdateLocalStorage,
                 loginAndUpdateLocalStorage,
                 logoutAndClearLocalStorage,
                 isUserLoggedIn,
